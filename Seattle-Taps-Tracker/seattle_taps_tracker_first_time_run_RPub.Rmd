@@ -1,0 +1,232 @@
+---
+title: "Seattle Taps Tracker"
+output: 
+  html_document
+    
+---
+
+##The Seattle Public Utilities website informs customers about the status of their water service project in table format.  This project visualizes them.
+
+###Step 1: Loading Required Packages and Server Connection
+
+```{r,echo=TRUE, warning=FALSE, error=TRUE, message=FALSE, results='hide'}
+library(RSelenium) #needed to get to web page, etc.
+library(XML) #needed for html parse
+library(ggmap) #needed for geocode
+library(leaflet) #needed for mapping
+
+#For RSelenium
+rD <- rsDriver() #runs a chrome browser, wait for necessary files to download
+remDr <- rD$client #no need for remDr$open() browser should already be open
+```
+
+###Step 2: Downloading Data on the Taps Tracker Website
+
+As of September 2017, there were over 2300 invoice/addresses.  If all are downloaded/scraped, the plot may be slow to load and maneuver.  For this reason, this project will only search on the term "2015".  To get all the data, change the term 
+
+**webElem$sendKeysToElement(list("2015",...**
+
+below to 
+
+**webElem$sendKeysToElement(list("",...**.  
+ 
+Althought the Taps Tracker says it searches by Invoice Number or Address, it searches by any text in the table on the website. 
+
+If the download stops prematurely, there may be an issue with the table formatting.  In this case, it may be easier to download the data manually as the search feature appears to be quite primitive and Boolean operators do not work.  If so, start at Step 3 and read the downloaded dataframe in.
+
+The search displays the first five results.  The code automatically downloads the results from the search, clicks to the next page, and continues downloading.  An important thing to note is that there will be an error message produced whenever the "next" arrow button is not found on the website (when it hits the last page). It does not affect anything.
+
+```{r,echo=TRUE, warning=TRUE, error=TRUE, message=FALSE, results='hide'}
+#Gets to first page of Taps Tracker which is a search page.  Here it will search on the term "2015".
+remDr$navigate("http://www.seattle.gov/util/tapstracker/")
+webElem <- remDr$findElement(using = 'id', "tapSearch")
+webElem$sendKeysToElement(list("2015","\uE007"))
+
+#Scrapes first page which has five rows of data
+doc <- htmlParse(remDr$getPageSource()[[1]])
+dat1<- readHTMLTable(doc)
+dat1<-dat1[[1]]
+
+#Clicks to next page
+webElemnext <- (remDr$findElement(using = 'css', 
+                value = '#grid > div.ui-columns-table > div > span.ui-table-controls > span.ui-table-control-next > img'))
+
+webElemnext$clickElement()
+
+#Scrapes the following page and appends it to the previous page
+repeat {
+    doc <- htmlParse(remDr$getPageSource()[[1]])
+    dat2<- readHTMLTable(doc)[[1]]
+    dat1<-rbind(dat1,dat2)
+ webElemnext <- (remDr$findElement(using = 'css', 
+                                 value = '#grid > div.ui-columns-table > div > span.ui-table-controls > span.ui-table-control-next > img'))
+
+webElemnext$clickElement()
+}   
+```
+
+###Step 3: Cleaning/Reformatting the Data
+
+Below is a sample of the data from the website.  It shows a project address and a work address.  The work addresses are the ones of interest, and they need to be separated out.  Many times there is just a project address.  In those cases, it can be assumed the project address and the work address is the same.
+
+There are a handful (on the order of ten) of project addresses/work addresses that are not in the typical format of "project address - work address" or just "project address".  These formats were found upon early review of the data. An example is "4034 /4040 M L KING JR WAY S". For completeness, these should be recoded.  Here, they are just removed. 
+
+```{r,echo=TRUE, warning=FALSE, error=TRUE, message=FALSE}
+#If there was a need to manually download the data, this is where a "dat1<-read.table ("taps_manually_downloaded")" command would go.
+
+head(dat1)
+
+#Makes tidy names 
+names(dat1) <- make.names(names(dat1), unique=TRUE)
+head(dat1)
+dim(dat1)
+
+#Remove duplicate rows (there may be duplicates on the website)
+dat<-dat1
+dat<-dat[!duplicated(dat), ]
+dim(dat)
+```
+
+Looking at the difference in dimensions shows how many dupicate rows were removed. There are `r dim(dat1)[1] - dim(dat)[1]` duplicate rows.
+
+```{r,echo=TRUE, warning=FALSE, error=TRUE, message=FALSE}
+#The project address/work address is a factor.  It needs to change to a character.
+str(dat)
+dat$Project.Address...Work.Address.<-as.character(dat$Project.Address...Work.Address.)
+str(dat)
+
+#Removes any projects that have an unknown address format.  
+dat1<-dat[grep (",|/",dat$Project.Address...Work.Address.,invert=TRUE), ]
+dim(dat1)
+```
+
+Looking at the difference in dimensions here shows how many addresses don't fit into the standard format.  If the dimensions of the table have been reduced significantly, the data needs to be re-evaluated.  There are `r dim(dat)[1] - dim(dat1)[1]` addresses with formatting issues.
+
+```{r,echo=TRUE, warning=FALSE, error=TRUE, message=FALSE}
+#Splits the project and work address (the work address is not final here).
+dat<-dat1
+dat$Project.Address<-strsplit(dat$Project.Address...Work.Address.," - ")
+dat$Project.Address<-unlist(lapply(dat$Project.Address, `[[`, 1))
+dat$Work.Address<-strsplit(dat$Project.Address...Work.Address.," - ")
+head (dat)
+
+#The second list element (work address) doesn't always exist so the format is a little different than separating out the first element (project address).  This puts in NA for many work addresses.  This will be addressed later in the code.
+dat$Work.Address<-sapply(dat$Work.Address,function(x) x[2])
+head(dat)
+
+#Add Seattle to address
+dat$Project.Address <- paste(dat$Project.Address, "Seattle", sep=" ")
+dat$Work.Address <- paste(dat$Work.Address, "Seattle", sep=" ")
+head(dat)
+
+#Replacing NA work addresses with the project addresses and outputing the data in case there is an issue with Step 4.
+dat$Work.Address<-ifelse (dat$Work.Address=="NA Seattle",dat$Project.Address,dat$Work.Address)
+head(dat)
+dim(dat)
+write.table (dat,"taps_output_no_geocode")
+```
+
+###Step 4: Geocoding the addresses
+
+Most visualization tools require latitude and longitude for mapping.  This project uses the Google Maps api.  Note that the Google Maps api limits to 2500 queries a day.  On a personal computer, geocoding takes roughly one or two seconds/address.  Because of the api limits and time limits, the output is written to "taps_output" in this step.  If this project needs to be run again at a later date, the "seattle_taps_tracker_additional_run" code should be run.  This brings in the "taps_output" file  so existing addresses do not need to be re-geocoded.  
+
+There may be warnings if the query limit has been exceeded (OVER QUERY LIMIT).  There may also be warnings if Google cannot find the address (ZERO RESULTS).  It is up to the user to evaluate these.  The warnings have been hidden in this code.
+
+```{r,echo=TRUE, warning=FALSE, error=TRUE, message=FALSE, results='hide'}
+#Geocoding: getting latitude and longitude for addresses and removing rows that could not be geocoded.  
+mygeocode<-geocode(dat$Work.Address)
+dat$lat<-mygeocode$lat
+dat$lon<-mygeocode$lon
+```
+
+```{r,echo=TRUE, warning=FALSE, error=TRUE, message=FALSE}
+dat1<-dat[!is.na(dat$lat),]
+head (dat1)
+dim(dat1)
+write.table (dat1,"taps_output")
+
+#A copy with the current date and time is produced in case of accidental corruption or deletion.
+write.table (dat1, paste("taps",format(Sys.time(), "%Y_%m_%d_%H_%M_%S"), sep = "_"))
+```
+
+Looking at the difference in dimensions here shows how many addresses could not be geocoded. There are `r dim(dat)[1] - dim(dat1)[1]` addresses that had issues.
+
+###Step 5: Mapping
+
+For this project, the work address and status (Pending, Completed, Canceled, On Hold) are mapped.  More complete and flexible mapping can be done in other software packages. 
+
+```{r,echo=TRUE, warning=TRUE, error=TRUE, message=FALSE, results='hide'}
+#Offset lat/lon a little so mapping pins don't overlap
+dat<-dat1
+dat$jlat <- jitter(dat$lat)
+dat$jlon <- jitter(dat$lon)
+```
+
+```{r,echo=TRUE, warning=TRUE, error=TRUE, message=FALSE, results='hide'}
+#Downloading pins
+workstaticons<- iconList(
+        cyan = makeIcon(iconUrl = "https://openclipart.org/download/140779/squat-marker-cyan.svg", 9,22),
+        orange= makeIcon(iconUrl = "https://openclipart.org/download/140755/squat-marker-orange.svg", 9,22),
+        purple= makeIcon(iconUrl = "https://openclipart.org/download/140785/squat-marker-purple.svg", 9,22), 
+        green= makeIcon(iconUrl = "https://openclipart.org/download/140749/squat-marker-green.svg", 9,22) 
+) 
+
+#Defining work status
+workstat<-dat$Work.Complete.Date.
+
+workpen<-dat[workstat=="Pending",]
+workhold<-dat[workstat=="Customer Hold",]
+workstop<-dat[workstat=="Work Stopped",]
+workcomp<-dat[grep("/", workstat),]
+
+#Defining which information will be shown when clicking on pins
+infopen <- paste(sep = "<br/>",
+         "Complete Date:", workpen$Work.Complete.Date.,
+         "Target Date Range:", workpen$Target.Date.Range.,
+                 workpen$Work.Address
+)
+infohold<- paste(sep = "<br/>",
+         "Complete Date:", workhold$Work.Complete.Date.,
+         "Target Date Range:", workhold$Target.Date.Range.,
+                           workhold$Work.Address
+)
+infostop<- paste(sep = "<br/>",
+        "Complete Date:", workstop$Work.Complete.Date.,
+        "Target Date Range:", workstop$Target.Date.Range.,
+                           workstop$Work.Address
+)
+infocomp <- paste(sep = "<br/>",
+        "Complete Date:", workcomp$Work.Complete.Date.,
+        "Target Date Range:", workcomp$Target.Date.Range.,
+                         workcomp$Work.Address
+)
+```
+
+Leaflet details.  There may be warnings if the coordinates can't be mapped.  It is up to the user to evaluate these.
+
+```{r,echo=TRUE, warning=FALSE, error=TRUE, message=FALSE}
+m <- leaflet() %>%
+    addTiles() %>%  # Add default OpenStreetMap map tiles"
+    addMarkers(data=workpen,lng=~jlon, lat=~jlat,  popup=infopen,group="Pending",icon= workstaticons$green) %>%
+    addMarkers(data=workhold,lng=~jlon, lat=~jlat, popup=infohold,group="Customer Hold",icon= workstaticons$orange) %>%
+    addMarkers(data=workstop,lng=~jlon, lat=~jlat, popup=infostop, group="Work Stopped",icon= workstaticons$purple) %>%
+    addMarkers(data=workcomp,lng=~jlon, lat=~jlat, popup=infocomp, group="Work Completed",icon= workstaticons$cyan) %>%
+    addLegend("bottomright",title = paste("Work Status as of", Sys.Date()), labels=c("Pending","Customer Hold", "Work Stopped", "Work Completed"),colors = c("green","orange","purple","cyan")) %>%
+     addLegend("bottomleft",title = "Click on pins for additional information",colors ="shite", labels = "")%>%
+    addLayersControl(
+         overlayGroups = c("Pending","Customer Hold", "Work Stopped", "Work Completed"),
+         options = layersControlOptions(collapsed = FALSE)
+         )
+m  # Print the map
+```
+      
+If there appear to be aberrant data points, these should be evaluated and edited.
+
+```{r,echo=TRUE, warning=TRUE, error=TRUE, message=FALSE,results='hide'}
+#Close the brower and the Selenium server
+remDr$close()
+rD$server$stop()
+```
+
+
+

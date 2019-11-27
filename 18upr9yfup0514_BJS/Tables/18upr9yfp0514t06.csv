@@ -1,0 +1,41 @@
+Bureau of Justice Statistics,,,,,,,,,,,,,,,,,,,,
+Filename: 18upr9yfp0514t06.csv,,,,,,,,,,,,,,,,,,,,
+"Table 6. Annual arrest percentage of prisoners released in 30 states in 2005, by most serious commitment offense and type of post-release arrest offense",,,,,,,,,,,,,,,,,,,,
+Report title: 2018 Update on Prisoner Recidivism: A 9-Year Follow-up Period (2005-2014)    NCJ 250975,,,,,,,,,,,,,,,,,,,,
+"Data source: Bureau of Justice Statistics, Recidivism of State Prisoners Released in 2005 data collection, 2005–2014.",,,,,,,,,,,,,,,,,,,,
+"Authors: Mariel Alper, Ph.D., and Matthew R. Durose, BJS Statisticians; Joshua Markman, former BJS Statistician",,,,,,,,,,,,,,,,,,,,
+Refer questions to: askbjs@usdoj.gov or 202-307-0765 ,,,,,,,,,,,,,,,,,,,,
+Date of version: 5/23/2018,,,,,,,,,,,,,,,,,,,,
+,,,,,,,,,,,,,,,,,,,,
+"Table 6. Annual arrest percentage of prisoners released in 30 states in 2005, by most serious commitment offense and type of post-release arrest offense",,,,,,,,,,,,,,,,,,,,
+,,,,,,,,,,,,,,,,,,,,
+Most serious commitment offense,,,Year 1,,Year 2,,Year 3,,Year 4,,Year 5,,Year 6,,Year 7,,Year 8,,Year 9,
+Any arrest after release,,,,,,,,,,,,,,,,,,,,
+,All released prisoners,,43.9,%,37.7,%,34.3,%,31.9,%,30.1,%,28,%,27.4,%,25.9,%,24,%
+,,Violent*,38.9,%,33.7,%,30.4,%,28.1,%,27.2,%,25,%,25.2,%,24.1,%,21.4,%
+,,Property,50.8,†,41.6,†,38.3,†,36.5,†,33.2,†,31.3,†,30.6,†,29.3,†,27.6,†
+,,Drug ,42.8,†,38.5,†,34.9,†,31.8,†,30.2,†,27.6,†,26.7,†,25,,23.4,†
+,,Public order ,40.5,,34.3,,31.2,,28.9,,28,,27,†,25.8,,23.8,,22.5,
+Violent arrest after release,,,,,,,,,,,,,,,,,,,,
+,All released prisoners,,9,%,8.3,%,7.6,%,7.6,%,7.2,%,6.5,%,6.6,%,6,%,5.2,%
+,,Violent*,11,%,10.2,%,8.4,%,8.8,%,8.9,%,6.8,%,6.9,%,6.5,%,5.8,%
+,,Property,9.3,†,7.8,†,7.7,,7.8,†,6.9,†,7.1,,7.2,,6.2,,5.7,
+,,Drug ,6.8,†,7.2,†,6.7,†,6.2,†,6.2,†,5.3,†,5.7,†,5.4,†,4.4,†
+,,Public order,9.7,,8.6,†,8.3,,8.1,,7.3,†,7.2,,6.6,,6.4,,5.3,
+Arrest after release for same type as most serious  commitment offense/a,,,,,,,,,,,,,,,,,,,,
+,All released prisoners,,21,%,18,%,15.6,%,14.5,%,13.7,%,12.2,%,11.8,%,11.5,%,10.6,%
+,,Violent,11,%,10.2,%,8.4,%,8.8,%,8.9,%,6.8,%,6.9,%,6.5,%,5.8,%
+,,Property,25,,20.6,,17.6,,16.9,,15.6,,14.2,,14.1,,13.9,,12.6,
+,,Drug ,22,,19.6,,17.2,,15,,13.8,,12.2,,11.5,,11.4,,11,
+,,Public order ,29.2,,23.8,,21.1,,19.2,,18.4,,18.2,,17,,16,,14.5,
+Arrested after release for different type of offense than most serious commitment offense/b,,,,,,,,,,,,,,,,,,,,
+,All released prisoners,,36.1,%,30.9,%,28,%,26.3,%,24.6,%,23.1,%,22.8,%,21.5,%,20,%
+,,Violent,35.2,%,30.4,%,27.6,%,25.1,%,23.9,%,22.7,%,22.8,%,22,%,19.5,%
+,,Property,42.4,,34.4,,31.6,,30.6,,27.6,,26,,25.6,,24.1,,23,
+,,Drug ,34.8,,31.3,,27.9,,26,,24.6,,22.7,,22.2,,20.7,,19.1,
+,,Public order ,26.3,,22.6,,20.7,,19.8,,18.7,,17.9,,18,,16.6,,16,
+"Note: Persons could have been in prison for more than one offense; the most serious one is reported in this table. Each arrest may include more than one type of offense. ""Type of offense"" refers to the categories of violent, property, drug, and public order. Public order includes 0.8% of cases in which prisoners' most serious offense was unspecified. See appendix table 8 for standard errors.",,,,,,,,,,,,,,,,,,,,
+*Comparison group.,,,,,,,,,,,,,,,,,,,,
+†Difference with comparison group is significant at the 95% confidence level.,,,,,,,,,,,,,,,,,,,,
+"a,b/Percentages in these two categories do not sum to the ""any arrest after release"" category because categories overlap.",,,,,,,,,,,,,,,,,,,,
+"Source: Bureau of Justice Statistics, Recidivism of State Prisoners Released in 2005 data collection, 2005-2014.",,,,,,,,,,,,,,,,,,,,

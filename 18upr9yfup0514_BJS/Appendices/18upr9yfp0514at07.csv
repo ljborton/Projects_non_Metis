@@ -1,0 +1,33 @@
+Bureau of Justice Statistics,,,,,,,,,,,,,,,,,,,,
+Filename: 18upr9yfp0514at07.csv,,,,,,,,,,,,,,,,,,,,
+"Appendix table 7. Standard errors for table 5, figure 1, figure 7, and figure 8: Annual arrest percentage of prisoners released in 30 states in 2005, by prisoner characteristics",,,,,,,,,,,,,,,,,,,,
+Report title: 2018 Update on Prisoner Recidivism: A 9-Year Follow-up Period (2005-2014)    NCJ 250975,,,,,,,,,,,,,,,,,,,,
+"Data source: Bureau of Justice Statistics, Recidivism of State Prisoners Released in 2005 data collection, 2005–2014.",,,,,,,,,,,,,,,,,,,,
+"Authors: Mariel Alper, Ph.D., and Matthew R. Durose, BJS Statisticians; Joshua Markman, former BJS Statistician",,,,,,,,,,,,,,,,,,,,
+Refer questions to: askbjs@usdoj.gov or 202-307-0765 ,,,,,,,,,,,,,,,,,,,,
+Date of version: 5/23/2018,,,,,,,,,,,,,,,,,,,,
+,,,,,,,,,,,,,,,,,,,,
+"Appendix table 7. Standard errors for table 5, figure 1, figure 7, and figure 8: Annual arrest percentage of prisoners released in 30 states in 2005, by prisoner characteristics",,,,,,,,,,,,,,,,,,,,
+,,,,,,,,,,,,,,,,,,,,
+Characteristic ,,,Year 1,,Year 2,,Year 3,,Year 4,,Year 5,,Year 6,,Year 7,,Year 8,,Year 9,
+,All released prisoners,,0.29,%,0.29,%,0.29,%,0.29,%,0.28,%,0.28,%,0.28,%,0.27,%,0.27,%
+Sex,,,,,,,,,,,,,,,,,,,,
+,Male,,0.32,%,0.32,%,0.32,%,0.32,%,0.31,%,0.31,%,0.31,%,0.3,%,0.3,%
+,Female,,0.49,,0.5,,0.49,,0.48,,0.47,,0.46,,0.45,,0.44,,0.44,
+Age at release,,,,,,,,,,,,,,,,,,,,
+,24 or younger,,0.68,%,0.69,%,0.68,%,0.67,%,0.68,%,0.66,%,0.67,%,0.65,%,0.64,%
+,25-39,,0.41,,0.42,,0.41,,0.41,,0.4,,0.4,,0.4,,0.39,,0.39,
+,,25-29,0.68,,0.68,,0.68,,0.67,,0.65,,0.65,,0.65,,0.64,,0.63,
+,,30-34,0.76,,0.75,,0.73,,0.73,,0.72,,0.71,,0.7,,0.7,,0.67,
+,,35-39,0.77,,0.76,,0.76,,0.75,,0.74,,0.73,,0.74,,0.71,,0.72,
+,40 or older,,0.54,,0.53,,0.52,,0.52,,0.51,,0.49,,0.48,,0.47,,0.47,
+Race/Hispanic origin, ,,, ,, ,, ,, ,, ,, ,, ,, ,,
+,White,,0.44,%,0.44,%,0.43,%,0.43,%,0.42,%,0.41,%,0.41,%,0.4,%,0.4,%
+,Black/African American,,0.42,,0.43,,0.42,,0.42,,0.41,,0.4,,0.41,,0.4,,0.39,
+,Hispanic/Latino,,0.93,,0.92,,0.91,,0.9,,0.88,,0.86,,0.85,,0.83,,0.83,
+,Other,,1.98,,1.99,,1.94,,1.87,,1.83,,1.9,,1.86,,1.9,,1.7,
+,,"American Indian or
+Alaska Native",2.21,,2.22,,2.22,,2.01,,2.06,,2.18,,2.21,,2.13,,1.83,
+,,"Asian, Native Hawaiian,
+or Other Pacific Islander",3.77,,3.86,,3.5,,3.64,,3.49,,3.58,,3.5,,3.66,,3.14,
+"Source: Bureau of Justice Statistics, Recidivism of State Prisoners Released in 2005 data collection, 2005-2014.",,,,,,,,,,,,,,,,,,,,
